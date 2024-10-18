@@ -3,7 +3,13 @@ using Azure.AI.Inference;
 
 // To authenticate with the model you will need to generate a personal access token (PAT) in your GitHub settings. 
 // Create your PAT token by following instructions here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-var credential = new AzureKeyCredential(System.Environment.GetEnvironmentVariable("GITHUB_TOKEN"));
+var token = System.Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+if (string.IsNullOrEmpty(token))
+{
+    throw new System.ArgumentNullException("GITHUB_TOKEN", "Please set the GITHUB_TOKEN environment variable.");
+}
+
+var credential = new AzureKeyCredential(token);
 
 var url = new Uri("https://models.inference.ai.azure.com");
 var client = new ChatCompletionsClient(
